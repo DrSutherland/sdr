@@ -1,0 +1,36 @@
+#!/bin/bash
+#louis, 10 mai 2012
+#Ce script est utile parce que l'app gnuradio python ne ferme pas correctement le canal audio lors de l'exit.
+
+usage() {
+  echo
+  echo " Usage: $0 start|stop args"
+  echo " Ex: $0 start 102.722"
+  echo "     $0 stop"
+  echo
+}
+
+if [ $# -eq 0 ]
+then
+  usage
+  exit
+fi
+
+if [ "$1" = "start" ]
+then
+  [ -e /tmp/sdr-data ] || mkfifo /tmp/sdr-data
+  python rtl_sdr_wfm_rx.py &
+  sleep 5
+  rtl_sdr -f "${2}e6" -s 1024000 /tmp/sdr-data &
+  exit
+elif [ "$1" = "stop" ]
+then
+  PID=`ps -ef | grep "rtl_sdr_wfm_rx.py" | grep -v grep | awk -F " " '{print $2}'`
+  kill -9 $PID
+  killall pulseaudio
+  lsof /dev/snd/pcmC*
+  exit
+else
+  usage
+fi
+

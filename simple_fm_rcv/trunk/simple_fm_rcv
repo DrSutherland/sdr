@@ -1,0 +1,120 @@
+#!/bin/sh
+LOGFILE=/dev/null
+PYTHONPATH=$PYTHONPATH:$HOME/bin:.
+export PYTHONPATH
+DEVID=rtl=0
+FREQ=96.6e6
+SUBDEV=A:RX1
+ANT=J1
+AHW=Default
+XMLPORT=13777
+GAIN=15.0
+RDS=False
+ARATE=48000
+FTUNE=0
+MUTE=-15.0
+DEEMPH=75.0e-6
+LCL_PREFREQS="[91.5e6,92.3e6,101.1e6,103.3e6,106.1e6,106.9e6]"
+LCL_PRENAMES="['CBC-1','JACK','Y101','CBC-2','CHEZ','BEAR']"
+if [ @$FM_PREFREQS@ = @@ ]
+then
+	FM_PREFREQS="$LCL_PREFREQS"
+fi
+if [ @$FM_PRENAMES@ = @@ ]
+then
+	FM_PRENAMES="$LCL_PRENAMES"
+fi
+
+while [ $# -ge 1 ]
+do
+	case $1 in
+	--devid)
+		DEVID=$2
+		shift 2
+		;;
+	--freq)
+		FREQ=$2
+		shift 2
+		;;
+	--subdev)
+		SUBDEV=$2
+		shift 2
+		;;
+	--ant)
+		ANT=$2
+		shift 2
+		;;
+	--ahw)
+		AHW=$2
+		shift 2
+		;;
+	--xmlport)
+		XMLPORT=$2
+		shift 2
+		;;
+	--gain)
+		GAIN=$2
+		shift 2
+		;;
+	--prefreqs)
+		FM_PREFREQS="$2"
+		shift 2
+		;;
+	--prenames)
+		FM_PRENAMES="$2"
+		shift 2
+		;;
+		
+	--logfile)
+		LOGFILE=$2
+		shift 2
+		;;
+
+	--arate)
+		ARATE=$2
+		shift 2
+		;;
+	
+	--ftune)
+		FTUNE=$2
+		shift 2
+		;;
+	
+	--deemph)
+		DEEMPH=$2
+		shift 2
+		;;
+		
+	--help)
+		shift
+		cat <<!EOF!
+Usage: simple_fm_rcv [options]
+ --devid    <device_id>      Default: $DEVID  (UHD ONLY)
+ --freq     <frequency>      Default: $FREQ
+ --subdev   <sub-dev>        Default: $SUBDEV (UHD ONLY)
+ --ant      <antenna>        Default: $ANT    (UHD ONLY)
+ --ahw      <audio hw>       Default: $AHW
+ --xmlport  <xmlrpc port>    Default: $XMLPORT
+ --gain     <RF gain>        Default: $GAIN
+ --prefreqs <preset-freqs>   Default: $FM_PREFREQS
+ --prenames <preset-names>   Default: $FM_PRENAMES
+ --arate    <audio-srate>    Default: $ARATE
+ --ftune    <fine-tuning>    Default: $FTUNE
+ --mute     <mute-level(dB)> Default: $MUTE
+ --deemph   <deemph tconst>  Default: $DEEMPH
+	
+Environment variables:
+
+FM_PREFREQS   Example:  $LCL_PREFREQS
+FM_PRENAMES   Example:  $LCL_PRENAMES
+!EOF!
+		exit
+		;;
+	esac
+done
+
+./simple_fm_rcv.py --devid $DEVID --freq $FREQ --gain $GAIN \
+    --subdev $SUBDEV --ant $ANT --ahw $AHW \
+	--volume 3.5 --xmlport $XMLPORT \
+	--prefreqs "$FM_PREFREQS" --prenames "$FM_PRENAMES" --ftune $FTUNE --arate $ARATE --mute $MUTE \
+	--deemph $DEEMPH >$LOGFILE 2>&1

@@ -1,0 +1,2 @@
+mkfifo rds_fifo
+./simple_fm_rcv.py --freq=96.6M --gain=50
