@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Am Aviation
-# Generated: Mon May 21 12:59:44 2012
+# Generated: Tue May 29 09:17:02 2012
 ##################################################
 
 from gnuradio import audio
@@ -131,6 +131,7 @@ class am_aviation(grc_wxgui.top_block_gui):
 		self.rtl2832_source_0.set_relative_gain(True)
 		self.rtl2832_source_0.set_gain(30)
 		  
+		self.gr_wavfile_sink_0 = gr.wavfile_sink("/home/louis/Dropbox/sdr/AM/134.5MHZ.am.wav", 1, 48000, 16)
 		self.gr_simple_squelch_cc_0 = gr.simple_squelch_cc(sql_threshold, 0.0001)
 		self.gr_agc2_xx_0 = gr.agc2_cc(100e-3, 200e-3, 1.0, 1.0, 2.0)
 		self.blks2_rational_resampler_xxx_0 = blks2.rational_resampler_ccc(
@@ -156,6 +157,7 @@ class am_aviation(grc_wxgui.top_block_gui):
 		self.connect((self.gr_agc2_xx_0, 0), (self.blks2_am_demod_cf_0, 0))
 		self.connect((self.rtl2832_source_0, 0), (self.blks2_rational_resampler_xxx_0, 0))
 		self.connect((self.rtl2832_source_0, 0), (self.wxgui_waterfallsink2_0, 0))
+		self.connect((self.blks2_am_demod_cf_0, 0), (self.gr_wavfile_sink_0, 0))
 
 	def get_sql_threshold(self):
 		return self.sql_threshold

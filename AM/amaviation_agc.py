@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Amaviation Agc
-# Generated: Tue May 22 20:49:45 2012
+# Generated: Tue May 29 09:09:45 2012
 ##################################################
 
 from gnuradio import audio
@@ -148,7 +148,7 @@ class amaviation_agc(grc_wxgui.top_block_gui):
 			audio_pass=5000,
 			audio_stop=5500,
 		)
-		self.audio_sink_0 = audio.sink(48000, "hw:1,0", True)
+		self.audio_sink_0 = audio.sink(48000, "pulse", True)
 
 		##################################################
 		# Connections
